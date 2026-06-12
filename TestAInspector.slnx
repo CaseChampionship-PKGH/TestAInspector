@@ -1,8 +1,34 @@
 <Solution>
-  <Project Path="TestAInspector.Api/TestAInspector.Api.csproj" />
+  <Folder Name="/Common/">
+    <Project Path="Common/TestAInspector.Common.Core/TestAInspector.Common.Core.csproj" Id="206ea702-1942-47b5-8f8e-86f696b4144c" />
+    <Project Path="Common/TestAInspector.Common.Mvc/TestAInspector.Common.Mvc.csproj" Id="6918fb53-29b7-4086-83ac-2b8639ecc426" />
+  </Folder>
+  <Folder Name="/Core/" />
+  <Folder Name="/Core/Agents/">
+    <Project Path="Core/Agents/TestAInspector.Agent.Contracts/TestAInspector.Agent.Contracts.csproj" Id="68b55988-adea-4888-9311-7196c45ed42f" />
+  </Folder>
+  <Folder Name="/Core/Analysis/">
+    <Project Path="Core/Analysis/TestAInspector.Analysis.Contracts/TestAInspector.Analysis.Contracts.csproj" Id="f701e3fb-9175-4c7d-8de4-765245a03b57" />
+  </Folder>
+  <Folder Name="/Core/Entities/">
+    <Project Path="Core/Entities/TestAInspector.Entities/TestAInspector.Entities.csproj" Id="03f072d3-5937-4d75-a76c-d4353c6e4def" />
+  </Folder>
+  <Folder Name="/Core/Parsing/">
+    <Project Path="Core/Parsing/TestAInspector.Parsing.Contracts/TestAInspector.Parsing.Contracts.csproj" Id="9e217f39-06b9-4ad1-8121-43ceb36de55f" />
+  </Folder>
+  <Folder Name="/Core/Reporting/">
+    <Project Path="Core/Reporting/TestAInspector.Reporting.Contracts/TestAInspector.Reporting.Contracts.csproj" Id="afac84e6-43e4-4b6d-b92e-cb3d5fa88cdf" />
+  </Folder>
+  <Folder Name="/Core/Services/">
+    <Project Path="Core/Services/TestAInspector.Services.Contracts/TestAInspector.Services.Contracts.csproj" Id="0ebd6e3a-bfbe-4238-9da1-41d14f0b07fa" />
+  </Folder>
+  <Folder Name="/Core/Validation/">
+    <Project Path="Core/Validation/TestAInspector.Validation.Contracts/TestAInspector.Validation.Contracts.csproj" Id="36a68661-51f8-4e02-a822-b041e0af5765" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+  <Project Path="TestAInspector.Api/TestAInspector.Api.csproj" />
 </Solution>

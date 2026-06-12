@@ -10,4 +10,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Services\TestAInspector.Services.Contracts\TestAInspector.Services.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -11,5 +11,5 @@ public interface ITestAnalysisAgent
     /// <summary>
     /// Сравнить правильность ответа пользователя и эталона 
     /// </summary>
-    Task<ComparisonResult> CompareAsync(ReferenceAnswer reference, TestResult userAnswer);
+    Task<ComparisonResult> CompareAsync(ReferenceAnswer reference, UserTestResult userAnswer);
 }

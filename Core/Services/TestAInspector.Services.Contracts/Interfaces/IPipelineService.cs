@@ -1,5 +1,4 @@
-﻿using TestAInspector.Analysis.Contracts.Enums;
-using TestAInspector.Services.Contracts.Models;
+﻿using TestAInspector.Services.Contracts.Models;
 
 namespace TestAInspector.Services.Contracts.Interfaces;
 
@@ -11,5 +10,5 @@ public interface IPipelineService
     /// <summary>
     /// Валидировать результаты теста
     /// </summary>
-    Task<PipelineResult> RunAsync(Stream inputStream, AnalysisMethod analysisMethod);
+    Task<PipelineResult> RunAsync(PipelineContext context);
 }

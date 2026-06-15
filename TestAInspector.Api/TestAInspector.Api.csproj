@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\TestAInspector.Common.Mvc\TestAInspector.Common.Mvc.csproj" />
+    <ProjectReference Include="..\Core\Parsing\TestAInspector.Parsing.Csv\TestAInspector.Parsing.Csv.csproj" />
+    <ProjectReference Include="..\Core\Parsing\TestAInspector.Parsing\TestAInspector.Parsing.csproj" />
     <ProjectReference Include="..\Core\Services\TestAInspector.Services.Contracts\TestAInspector.Services.Contracts.csproj" />
   </ItemGroup>
 

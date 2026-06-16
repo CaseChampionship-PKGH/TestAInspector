@@ -2,6 +2,8 @@
 using TestAInspector.Parsing;
 using TestAInspector.Parsing.Contracts.Interfaces;
 using TestAInspector.Parsing.Csv;
+using TestAInspector.Reporting;
+using TestAInspector.Services;
 using Module = TestAInspector.Common.Mvc.Module;
 
 namespace TestAInspector.Api.DI
@@ -14,6 +16,9 @@ namespace TestAInspector.Api.DI
         {
             services.RegisterMultipleInterfacesAssignableTo<IDataParser, UserAnswersCsvParser>(ServiceLifetime.Singleton);
             services.RegisterAsImplementedInterfaces<ParserFactory>(ServiceLifetime.Singleton);
+            services.RegisterAsImplementedInterfaces<FormatDetector>(ServiceLifetime.Singleton);
+            services.RegisterAsImplementedInterfaces<MockReportExporter>(ServiceLifetime.Singleton);
+            services.RegisterAsImplementedInterfaces<TestAnalysisPipeline>(ServiceLifetime.Singleton);
             services.AddHttpContextAccessor();
         }
     }

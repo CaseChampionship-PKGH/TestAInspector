@@ -1,4 +1,5 @@
 ﻿using TestAInspector.Analysis.Contracts.Models;
+using TestAInspector.Entities.Models;
 
 namespace TestAInspector.Services.Contracts.Models;
 
@@ -16,4 +17,9 @@ public record PipelineResult
     /// Отчёт
     /// </summary>
     public ReportData ReportData { get; set; } = null!;
+
+    /// <summary>
+    /// Распарсенные данные (для теста, потом удалить)
+    /// </summary>
+    public List<UserTestResult> Parsed { get; set; } = null!;
 }

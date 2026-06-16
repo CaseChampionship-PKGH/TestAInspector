@@ -22,16 +22,19 @@ public class UserAnswersCsvParser : IDataParser
     /// <inheritdoc />
     public async Task<T> ParseAsync<T>(Stream input)
     {
+        var encoding = Encoding.GetEncoding("windows-1251");
+
+        // 2. Создаём StreamReader с нужной кодировкой
+        using var reader = new StreamReader(input, encoding, detectEncodingFromByteOrderMarks: false);
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             Delimiter = ";",
             HasHeaderRecord = true,
-            Encoding = Encoding.UTF8
         };
 
-        using var reader = new StreamReader(input);
         using var csv = new CsvReader(reader, config);
 
+        // 3. Читаем заголовок и тексты вопросов
         csv.Read();
         csv.ReadHeader();
         var headers = csv.HeaderRecord;
@@ -47,54 +50,81 @@ public class UserAnswersCsvParser : IDataParser
 
         var results = new List<UserTestResult>();
 
-        // 2. Обрабатываем строки пользователей
+        // 4. Обрабатываем строки пользователей
         while (csv.Read())
         {
             var userId = csv.GetField(0);
             if (string.IsNullOrWhiteSpace(userId) || userId.StartsWith(";;;"))
             {
-                continue; // пропускаем служебные строки
+                continue;
             }
+
+            // Парсим строку с баллами
+            var scoreString = csv.GetField(3) ?? string.Empty;
+            var (score, maxScore) = ParseScore(scoreString);
 
             var userResult = new UserTestResult
             {
                 UserId = userId,
-                Date = DateTime.Parse(csv.GetField(1) ?? DateTime.Now.ToString()),
+                Date = DateTime.TryParse(csv.GetField(1), out var date) ? date : DateTime.MinValue,
                 Status = csv.GetField(2) ?? string.Empty,
-                Score = ParseScore(csv.GetField(3) ?? string.Empty),
+                Score = score,
+                MaxScore = maxScore,
                 Answers = []
             };
 
             var fieldIdx = 4;
-            for (var q = 0; q < questionTexts.Count; q++)
+            for (var q = 0; q < questionTexts.Count && fieldIdx + 3 < csv.Parser.Count; q++)
             {
-                if (fieldIdx + 3 >= csv.Parser.Count)
+                var correctAnswer = csv.GetField(fieldIdx + 3);
+                if (string.IsNullOrWhiteSpace(correctAnswer))
                 {
-                    break;
+                    fieldIdx += 4;
+                    continue;
                 }
+
                 var answer = new QuestionAnswer
                 {
                     QuestionText = questionTexts[q],
-                    Type = csv.GetField(fieldIdx)!,
-                    UserAnswer = csv.GetField(fieldIdx + 2)!,
-                    CorrectAnswer = csv.GetField(fieldIdx + 3)!
+                    Type = csv.GetField(fieldIdx) ?? string.Empty,
+                    UserAnswer = csv.GetField(fieldIdx + 2) ?? string.Empty,
+                    CorrectAnswer = correctAnswer
                 };
                 userResult.Answers.Add(answer);
                 fieldIdx += 4;
             }
+
             results.Add(userResult);
         }
 
         return (T)(object)results;
     }
 
-    private static int ParseScore(string scoreString)
+    private static (int Score, int MaxScore) ParseScore(string scoreString)
     {
-        var parts = scoreString.Split('/');
-        if (parts.Length > 0 && int.TryParse(parts[0].Trim(), out var score))
+        if (string.IsNullOrWhiteSpace(scoreString))
         {
-            return score;
+            return (0, 0);
         }
-        return 0;
+
+        var parts = scoreString.Split('/');
+        if (parts.Length < 2)
+        {
+            return (0, 0);
+        }
+
+        var score = 0;
+        var maxScore = 0;
+
+        _ = int.TryParse(parts[0].Trim(), out score);
+        var maxPart = parts[1].Trim();
+        var spaceIdx = maxPart.IndexOf(' ');
+        if (spaceIdx > 0)
+        {
+            maxPart = maxPart.Substring(0, spaceIdx);
+        }
+        _ = int.TryParse(maxPart, out maxScore);
+
+        return (score, maxScore);
     }
 }

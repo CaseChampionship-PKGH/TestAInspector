@@ -20,9 +20,11 @@
   </Folder>
   <Folder Name="/Core/Reporting/">
     <Project Path="Core/Reporting/TestAInspector.Reporting.Contracts/TestAInspector.Reporting.Contracts.csproj" Id="afac84e6-43e4-4b6d-b92e-cb3d5fa88cdf" />
+    <Project Path="Core/Reporting/TestAInspector.Reporting/TestAInspector.Reporting.csproj" Id="ea353f40-5abe-48d1-8fd1-fc9853e244f9" />
   </Folder>
   <Folder Name="/Core/Services/">
     <Project Path="Core/Services/TestAInspector.Services.Contracts/TestAInspector.Services.Contracts.csproj" Id="0ebd6e3a-bfbe-4238-9da1-41d14f0b07fa" />
+    <Project Path="Core/Services/TestAInspector.Services/TestAInspector.Services.csproj" Id="c7830ca0-bd7c-4836-8fc0-750927d4b248" />
   </Folder>
   <Folder Name="/Core/Validation/">
     <Project Path="Core/Validation/TestAInspector.Validation.Contracts/TestAInspector.Validation.Contracts.csproj" Id="36a68661-51f8-4e02-a822-b041e0af5765" />

@@ -26,6 +26,11 @@ public class UserTestResult
     public int Score { get; set; }
 
     /// <summary>
+    /// Максимальное количество баллов
+    /// </summary>
+    public int MaxScore { get; set; }
+
+    /// <summary>
     /// Ответы пользователя
     /// </summary>
     public List<QuestionAnswer> Answers { get; set; } = null!;

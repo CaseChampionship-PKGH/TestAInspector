@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TestAInspector.Entities.Models;
+﻿using TestAInspector.Entities.Models;
+using TestAInspector.Validation.Contracts.Models;
 
 namespace TestAInspector.Validation.Contracts.Interfaces;
 
@@ -11,5 +11,5 @@ public interface IDataValidator
     /// <summary>
     /// Валидировать результаты теста и эталонные ответы
     /// </summary>
-    ValidationResult Validate(IEnumerable<UserTestResult> results, IEnumerable<ReferenceAnswer> references);
+    ValidationResult Validate(IEnumerable<UserTestResult> results);
 }

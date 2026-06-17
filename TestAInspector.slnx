@@ -28,6 +28,7 @@
   </Folder>
   <Folder Name="/Core/Validation/">
     <Project Path="Core/Validation/TestAInspector.Validation.Contracts/TestAInspector.Validation.Contracts.csproj" Id="36a68661-51f8-4e02-a822-b041e0af5765" />
+    <Project Path="Core/Validation/TestAInspector.Validation/TestAInspector.Validation.csproj" Id="7e4b2373-111e-4bca-b2ac-2360885bd76b" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />

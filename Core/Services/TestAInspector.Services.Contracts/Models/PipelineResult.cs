@@ -1,5 +1,5 @@
 ﻿using TestAInspector.Analysis.Contracts.Models;
-using TestAInspector.Entities.Models;
+using TestAInspector.Validation.Contracts.Models;
 
 namespace TestAInspector.Services.Contracts.Models;
 
@@ -21,5 +21,5 @@ public record PipelineResult
     /// <summary>
     /// Распарсенные данные (для теста, потом удалить)
     /// </summary>
-    public List<UserTestResult> Parsed { get; set; } = null!;
+    public ValidationResult ValidationResult { get; set; } = null!;
 }

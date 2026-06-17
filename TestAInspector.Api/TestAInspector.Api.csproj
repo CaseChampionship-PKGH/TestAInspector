@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Core\Reporting\TestAInspector.Reporting\TestAInspector.Reporting.csproj" />
     <ProjectReference Include="..\Core\Services\TestAInspector.Services.Contracts\TestAInspector.Services.Contracts.csproj" />
     <ProjectReference Include="..\Core\Services\TestAInspector.Services\TestAInspector.Services.csproj" />
+    <ProjectReference Include="..\Core\Validation\TestAInspector.Validation\TestAInspector.Validation.csproj" />
   </ItemGroup>
 
 </Project>

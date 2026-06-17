@@ -11,5 +11,5 @@ public interface IAnswerAnalyzer
     /// <summary>
     /// Проанализировать
     /// </summary>
-    Task<ComparisonResult> AnalyzeAsync(ReferenceAnswer reference, UserTestResult userAnswer);
+    Task<ComparisonResult> AnalyzeAsync(UserTestResult userAnswer);
 }

@@ -1,15 +1,10 @@
-﻿namespace TestAInspector.Entities.Models;
+﻿namespace TestAInspector.Validation.Contracts.Models;
 
 /// <summary>
-/// Эталонный ответ
+/// Сжатое представление вопроса для анализа
 /// </summary>
-public class ReferenceAnswer
+public record QuestionReference
 {
-    /// <summary>
-    /// Идентификатор вопроса
-    /// </summary>
-    public string QuestionId { get; set; } = string.Empty;
-
     /// <summary>
     /// Текст вопроса
     /// </summary>
@@ -21,7 +16,7 @@ public class ReferenceAnswer
     public string CorrectAnswer { get; set; } = string.Empty;
 
     /// <summary>
-    /// Тип задания
+    /// Тип вопроса
     /// </summary>
     public string Type { get; set; } = string.Empty;
 }

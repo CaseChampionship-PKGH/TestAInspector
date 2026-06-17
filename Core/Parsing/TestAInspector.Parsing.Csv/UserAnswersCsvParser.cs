@@ -24,7 +24,6 @@ public class UserAnswersCsvParser : IDataParser
     {
         var encoding = Encoding.GetEncoding("windows-1251");
 
-        // 2. Создаём StreamReader с нужной кодировкой
         using var reader = new StreamReader(input, encoding, detectEncodingFromByteOrderMarks: false);
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
@@ -34,7 +33,6 @@ public class UserAnswersCsvParser : IDataParser
 
         using var csv = new CsvReader(reader, config);
 
-        // 3. Читаем заголовок и тексты вопросов
         csv.Read();
         csv.ReadHeader();
         var headers = csv.HeaderRecord;
@@ -50,7 +48,6 @@ public class UserAnswersCsvParser : IDataParser
 
         var results = new List<UserTestResult>();
 
-        // 4. Обрабатываем строки пользователей
         while (csv.Read())
         {
             var userId = csv.GetField(0);
@@ -59,7 +56,6 @@ public class UserAnswersCsvParser : IDataParser
                 continue;
             }
 
-            // Парсим строку с баллами
             var scoreString = csv.GetField(3) ?? string.Empty;
             var (score, maxScore) = ParseScore(scoreString);
 

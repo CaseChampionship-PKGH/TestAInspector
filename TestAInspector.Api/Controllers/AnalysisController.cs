@@ -49,8 +49,6 @@ public class AnalysisController : ControllerBase
         {
             UserAnswersStream = userAnswers.OpenReadStream(),
             UserAnswersFileName = userAnswers.FileName,
-            ReferenceAnswersStream = referenceAnswers.OpenReadStream(),
-            ReferenceAnswersFileName = referenceAnswers.FileName,
             AnalysisMethod = analysisMethod
         };
 
@@ -91,8 +89,6 @@ public class AnalysisController : ControllerBase
         {
             UserAnswersStream = userAnswers.OpenReadStream(),
             UserAnswersFileName = userAnswers.FileName,
-            ReferenceAnswersStream = referenceAnswers.OpenReadStream(),
-            ReferenceAnswersFileName = referenceAnswers.FileName,
             AnalysisMethod = analysisMethod
         };
 

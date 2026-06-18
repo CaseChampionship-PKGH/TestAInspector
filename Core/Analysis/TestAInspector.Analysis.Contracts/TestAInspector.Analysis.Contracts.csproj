@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Entities\TestAInspector.Entities\TestAInspector.Entities.csproj" />
+    <ProjectReference Include="..\..\Validation\TestAInspector.Validation.Contracts\TestAInspector.Validation.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

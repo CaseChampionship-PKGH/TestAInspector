@@ -1,5 +1,5 @@
-﻿using TestAInspector.Analysis.Contracts.Models;
-using TestAInspector.Entities.Models;
+﻿using TestAInspector.Agent.Contracts.Models;
+using TestAInspector.Validation.Contracts.Models.Batch;
 
 namespace TestAInspector.Agent.Contracts.Interfaces;
 
@@ -9,7 +9,7 @@ namespace TestAInspector.Agent.Contracts.Interfaces;
 public interface ITestAnalysisAgent
 {
     /// <summary>
-    /// Сравнить правильность ответа пользователя и эталона 
+    /// Сравнить правильность ответа пользователя
     /// </summary>
-    Task<ComparisonResult> CompareAsync(ReferenceAnswer reference, UserTestResult userAnswer);
+    Task<AgentBatchResponse> AnalyzeBatchAsync(QuestionBatch questionBatch);
 }

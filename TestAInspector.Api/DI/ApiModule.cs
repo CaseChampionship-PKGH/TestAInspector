@@ -21,6 +21,7 @@ namespace TestAInspector.Api.DI
             services.RegisterAsImplementedInterfaces<MockReportExporter>(ServiceLifetime.Singleton);
             services.RegisterAsImplementedInterfaces<TestAnalysisPipeline>(ServiceLifetime.Singleton);
             services.RegisterAsImplementedInterfaces<DataValidator>(ServiceLifetime.Singleton);
+            services.RegisterAsImplementedInterfaces<QuestionBatchBuilder>(ServiceLifetime.Singleton);
             services.AddHttpContextAccessor();
         }
     }

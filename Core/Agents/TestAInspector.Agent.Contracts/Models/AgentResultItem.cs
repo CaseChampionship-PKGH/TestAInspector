@@ -1,9 +1,9 @@
-﻿namespace TestAInspector.Analysis.Contracts.Models;
+﻿namespace TestAInspector.Agent.Contracts.Models;
 
 /// <summary>
-/// Результат сравнения тестирования
+/// Сведения о ответе пользователя
 /// </summary>
-public class ComparisonResult
+public class AgentResultItem
 {
     /// <summary>
     /// Идентфикатор пользователя
@@ -11,14 +11,14 @@ public class ComparisonResult
     public string UserId { get; set; } = string.Empty;
 
     /// <summary>
+    /// Процент схожести
+    /// </summary>
+    public double SimilarityPercent { get; set; }
+
+    /// <summary>
     /// Вердикт ("correct", "partial", "incorrect")
     /// </summary>
     public string Verdict { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Процент равности
-    /// </summary>
-    public double SimilarityPercent { get; set; }
 
     /// <summary>
     /// Комментарий

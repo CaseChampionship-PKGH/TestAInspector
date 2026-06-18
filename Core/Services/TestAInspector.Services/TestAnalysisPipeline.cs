@@ -1,9 +1,11 @@
-﻿using TestAInspector.Entities.Models;
+﻿using TestAInspector.Analysis.Contracts.Models;
+using TestAInspector.Entities.Models;
 using TestAInspector.Parsing.Contracts.Enums;
 using TestAInspector.Parsing.Contracts.Interfaces;
 using TestAInspector.Services.Contracts.Interfaces;
 using TestAInspector.Services.Contracts.Models;
 using TestAInspector.Validation.Contracts.Interfaces;
+using TestAInspector.Validation.Contracts.Models.Batch.Enums;
 
 namespace TestAInspector.Services;
 
@@ -15,17 +17,23 @@ public class TestAnalysisPipeline : IPipelineService
     private readonly IFormatDetector formatDetector;
     private readonly IParserFactory parserFactory;
     private readonly IDataValidator dataValidator;
+    private readonly IQuestionBatchBuilder batchBuilder;
+    //private readonly IAgentFactory agentFactory;
 
     /// <summary>
     /// Инициализирует новый экземпляр <see cref="TestAnalysisPipeline"/>
     /// </summary>
     public TestAnalysisPipeline(IFormatDetector formatDetector,
         IParserFactory parserFactory,
-        IDataValidator dataValidator)
+        IDataValidator dataValidator,
+        IQuestionBatchBuilder batchBuilder)
+    //IAgentFactory agentFactory)
     {
         this.formatDetector = formatDetector;
         this.parserFactory = parserFactory;
         this.dataValidator = dataValidator;
+        this.batchBuilder = batchBuilder;
+        //this.agentFactory = agentFactory;
     }
 
     async Task<PipelineResult> IPipelineService.RunAsync(PipelineContext context)
@@ -35,11 +43,65 @@ public class TestAnalysisPipeline : IPipelineService
 
         var parsedUserAnswers = await userAnswersParser.ParseAsync<List<UserTestResult>>(context.UserAnswersStream);
 
-        var validatedResult = dataValidator.Validate(parsedUserAnswers);
+        var validationResult = dataValidator.Validate(parsedUserAnswers);
+
+        var batches = batchBuilder.Build(validationResult);
+
+        // 3. Анализ каждого вопроса через агента
+        var allQuestionResults = new List<QuestionAnalysisResult>();
+
+        //var agent = agentFactory.CreateAnalysisAgent(context.AnalysisMethod == AnalysisMethod.RussianAiAgent
+        //    ? AgentVariant.Russian
+        //    : AgentVariant.Foreign);
+
+        foreach (var batch in batches)
+        {
+            // Отбираем только ответы, требующие ИИ
+            var needAnalysis = batch.Answers
+                .Where(a => a.PreStatus == AnswerPreStatus.NeedAnalysis)
+                .ToList();
+
+            //var aiResults = new List<ComparisonResult>();
+            //if (needAnalysis.Count != 0)
+            //{
+            //    var agentResponse = await agent.AnalyzeBatchAsync(batch);
+            //    aiResults = agentResponse.Results.Select(r => new ComparisonResult
+            //    {
+            //        UserId = r.UserId,
+            //        SimilarityPercent = r.SimilarityPercent,
+            //        Verdict = r.Verdict,
+            //        Comment = r.Comment
+            //    }).ToList();
+            //}
+
+            // Объединяем с предопределёнными результатами
+            var finalResults = batch.Answers.Select(item =>
+            {
+                if (item.PreStatus == AnswerPreStatus.ExactMatch)
+                {
+                    return new ComparisonResult { UserId = item.UserId, SimilarityPercent = 100, Verdict = "correct" };
+                }
+                else if (item.PreStatus == AnswerPreStatus.Empty)
+                {
+                    return new ComparisonResult { UserId = item.UserId, SimilarityPercent = 0, Verdict = "incorrect", Comment = "пустой ответ" };
+                }
+                else
+                {
+                    return new ComparisonResult { UserId = item.UserId, SimilarityPercent = 50, Verdict = "partical", Comment = "нуждается в анализе" };
+                }
+                //return aiResults.First(r => r.UserId == item.UserId);
+            }).ToList();
+
+            allQuestionResults.Add(new QuestionAnalysisResult
+            {
+                Question = batch.Question,
+                Results = finalResults
+            });
+        }
 
         return new PipelineResult()
         {
-            ValidationResult = validatedResult,
+            AnalysisData = allQuestionResults,
         };
     }
 }

@@ -10,5 +10,5 @@ public interface IReportAgent
     /// <summary>
     /// Сгенерировать отчёт по данным анализов 
     /// </summary>
-    Task<ReportData> GenerateReportAsync(AnalysisData analysisData);
+    Task<ReportData> GenerateReportAsync(List<QuestionAnalysisResult> analysisData);
 }

@@ -5,4 +5,8 @@
 /// </summary>
 public class LlmResponse
 {
+    /// <summary>
+    /// Сырые данные ответа от ИИ-агента
+    /// </summary>
+    public string RawResponse { get; set; } = string.Empty;
 }

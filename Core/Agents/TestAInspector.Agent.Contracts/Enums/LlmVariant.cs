@@ -3,7 +3,7 @@
 /// <summary>
 /// Группа ИИ-Агентов
 /// </summary>
-public enum AgentVariant
+public enum LlmVariant
 {
     /// <summary>
     /// Российская группа ИИ-Агентов

@@ -1,4 +1,5 @@
-﻿using TestAInspector.Agent.Contracts.Models;
+﻿using TestAInspector.Agent.Contracts.Enums;
+using TestAInspector.Agent.Contracts.Models;
 using TestAInspector.Validation.Contracts.Models.Batch;
 
 namespace TestAInspector.Agent.Contracts.Interfaces;
@@ -11,5 +12,5 @@ public interface ITestAnalysisAgent
     /// <summary>
     /// Сравнить правильность ответа пользователя
     /// </summary>
-    Task<AgentBatchResponse> AnalyzeBatchAsync(QuestionBatch questionBatch);
+    Task<AgentBatchResponse> AnalyzeBatchAsync(QuestionBatch questionBatch, LlmVariant llmVariant);
 }

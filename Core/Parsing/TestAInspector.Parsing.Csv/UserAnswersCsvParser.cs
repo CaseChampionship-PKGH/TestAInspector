@@ -19,8 +19,7 @@ public class UserAnswersCsvParser : IDataParser
     /// <inheritdoc />
     public ParsingTarget Target => ParsingTarget.UserAnswers;
 
-    /// <inheritdoc />
-    public async Task<T> ParseAsync<T>(Stream input)
+    async Task<T> IDataParser.ParseAsync<T>(Stream input)
     {
         var encoding = Encoding.GetEncoding("windows-1251");
 

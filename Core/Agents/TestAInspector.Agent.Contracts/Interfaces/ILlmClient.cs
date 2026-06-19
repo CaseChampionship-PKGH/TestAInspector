@@ -1,4 +1,5 @@
-﻿using TestAInspector.Agent.Contracts.Models;
+﻿using TestAInspector.Agent.Contracts.Enums;
+using TestAInspector.Agent.Contracts.Models;
 
 namespace TestAInspector.Agent.Contracts.Interfaces;
 
@@ -7,6 +8,11 @@ namespace TestAInspector.Agent.Contracts.Interfaces;
 /// </summary>
 public interface ILlmClient
 {
+    /// <summary>
+    /// Группа LLM
+    /// </summary>
+    LlmVariant LlmVariant { get; }
+
     /// <summary>
     /// Отправить запрос 
     /// </summary>

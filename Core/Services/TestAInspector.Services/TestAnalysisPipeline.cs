@@ -1,4 +1,7 @@
-﻿using TestAInspector.Analysis.Contracts.Models;
+﻿using TestAInspector.Agent.Contracts.Enums;
+using TestAInspector.Agent.Contracts.Interfaces;
+using TestAInspector.Analysis.Contracts.Enums;
+using TestAInspector.Analysis.Contracts.Models;
 using TestAInspector.Entities.Models;
 using TestAInspector.Parsing.Contracts.Enums;
 using TestAInspector.Parsing.Contracts.Interfaces;
@@ -18,7 +21,7 @@ public class TestAnalysisPipeline : IPipelineService
     private readonly IParserFactory parserFactory;
     private readonly IDataValidator dataValidator;
     private readonly IQuestionBatchBuilder batchBuilder;
-    //private readonly IAgentFactory agentFactory;
+    private readonly ITestAnalysisAgent testAnalysisAgent;
 
     /// <summary>
     /// Инициализирует новый экземпляр <see cref="TestAnalysisPipeline"/>
@@ -26,14 +29,14 @@ public class TestAnalysisPipeline : IPipelineService
     public TestAnalysisPipeline(IFormatDetector formatDetector,
         IParserFactory parserFactory,
         IDataValidator dataValidator,
-        IQuestionBatchBuilder batchBuilder)
-    //IAgentFactory agentFactory)
+        IQuestionBatchBuilder batchBuilder,
+        ITestAnalysisAgent testAnalysisAgent)
     {
         this.formatDetector = formatDetector;
         this.parserFactory = parserFactory;
         this.dataValidator = dataValidator;
         this.batchBuilder = batchBuilder;
-        //this.agentFactory = agentFactory;
+        this.testAnalysisAgent = testAnalysisAgent;
     }
 
     async Task<PipelineResult> IPipelineService.RunAsync(PipelineContext context)
@@ -50,10 +53,6 @@ public class TestAnalysisPipeline : IPipelineService
         // 3. Анализ каждого вопроса через агента
         var allQuestionResults = new List<QuestionAnalysisResult>();
 
-        //var agent = agentFactory.CreateAnalysisAgent(context.AnalysisMethod == AnalysisMethod.RussianAiAgent
-        //    ? AgentVariant.Russian
-        //    : AgentVariant.Foreign);
-
         foreach (var batch in batches)
         {
             // Отбираем только ответы, требующие ИИ
@@ -61,18 +60,21 @@ public class TestAnalysisPipeline : IPipelineService
                 .Where(a => a.PreStatus == AnswerPreStatus.NeedAnalysis)
                 .ToList();
 
-            //var aiResults = new List<ComparisonResult>();
-            //if (needAnalysis.Count != 0)
-            //{
-            //    var agentResponse = await agent.AnalyzeBatchAsync(batch);
-            //    aiResults = agentResponse.Results.Select(r => new ComparisonResult
-            //    {
-            //        UserId = r.UserId,
-            //        SimilarityPercent = r.SimilarityPercent,
-            //        Verdict = r.Verdict,
-            //        Comment = r.Comment
-            //    }).ToList();
-            //}
+            var aiResults = new List<ComparisonResult>();
+            if (needAnalysis.Count != 0)
+            {
+                var agentResponse = await testAnalysisAgent.AnalyzeBatchAsync(batch, context.AnalysisMethod == AnalysisMethod.RussianAiAgent
+                    ? LlmVariant.Russian
+                    : LlmVariant.Foreign);
+
+                aiResults = agentResponse.Results.Select(r => new ComparisonResult
+                {
+                    UserId = r.UserId,
+                    SimilarityPercent = r.SimilarityPercent,
+                    Verdict = r.Verdict,
+                    Comment = r.Comment
+                }).ToList();
+            }
 
             // Объединяем с предопределёнными результатами
             var finalResults = batch.Answers.Select(item =>

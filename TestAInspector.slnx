@@ -39,4 +39,5 @@
     <File Path="Directory.Packages.props" />
   </Folder>
   <Project Path="TestAInspector.Api/TestAInspector.Api.csproj" />
+  <Project Path="TestAInspector.Web/TestAInspector.Web.csproj" Id="110a4ee0-1c0d-4e9d-8360-bc270717a7ca" />
 </Solution>

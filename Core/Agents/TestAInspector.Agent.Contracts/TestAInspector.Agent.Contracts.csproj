@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Analysis\TestAInspector.Analysis.Contracts\TestAInspector.Analysis.Contracts.csproj" />
+    <ProjectReference Include="..\..\Reporting\TestAInspector.Reporting.Contracts\TestAInspector.Reporting.Contracts.csproj" />
     <ProjectReference Include="..\..\Validation\TestAInspector.Validation.Contracts\TestAInspector.Validation.Contracts.csproj" />
   </ItemGroup>
 

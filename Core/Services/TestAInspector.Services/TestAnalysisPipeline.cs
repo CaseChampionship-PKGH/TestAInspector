@@ -50,12 +50,10 @@ public class TestAnalysisPipeline : IPipelineService
 
         var batches = batchBuilder.Build(validationResult);
 
-        // 3. Анализ каждого вопроса через агента
         var allQuestionResults = new List<QuestionAnalysisResult>();
 
         foreach (var batch in batches)
         {
-            // Отбираем только ответы, требующие ИИ
             var needAnalysis = batch.Answers
                 .Where(a => a.PreStatus == AnswerPreStatus.NeedAnalysis)
                 .ToList();
@@ -76,7 +74,6 @@ public class TestAnalysisPipeline : IPipelineService
                 }).ToList();
             }
 
-            // Объединяем с предопределёнными результатами
             var finalResults = batch.Answers.Select(item =>
             {
                 if (item.PreStatus == AnswerPreStatus.ExactMatch)
@@ -87,11 +84,7 @@ public class TestAnalysisPipeline : IPipelineService
                 {
                     return new ComparisonResult { UserId = item.UserId, SimilarityPercent = 0, Verdict = "incorrect", Comment = "пустой ответ" };
                 }
-                else
-                {
-                    return new ComparisonResult { UserId = item.UserId, SimilarityPercent = 50, Verdict = "partical", Comment = "нуждается в анализе" };
-                }
-                //return aiResults.First(r => r.UserId == item.UserId);
+                return aiResults.First(r => r.UserId == item.UserId);
             }).ToList();
 
             allQuestionResults.Add(new QuestionAnalysisResult

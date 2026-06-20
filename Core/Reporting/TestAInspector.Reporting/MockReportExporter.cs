@@ -1,5 +1,6 @@
 ﻿using TestAInspector.Analysis.Contracts.Models;
 using TestAInspector.Reporting.Contracts.Interfaces;
+using TestAInspector.Reporting.Contracts.Models;
 
 namespace TestAInspector.Reporting;
 

@@ -1,4 +1,4 @@
-﻿namespace TestAInspector.Web.Models;
+﻿namespace TestAInspector.Api.Models;
 
 /// <summary>
 /// Сводная статистика по всем вопросам.

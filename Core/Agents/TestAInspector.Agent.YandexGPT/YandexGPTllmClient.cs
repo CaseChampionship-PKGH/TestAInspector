@@ -11,8 +11,19 @@ public class YandexGPTllmClient : ILlmClient
 {
     LlmVariant ILlmClient.LlmVariant => LlmVariant.Russian;
 
-    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest request) => new LlmResponse()
+    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest request) => new()
     {
-        RawResponse = "бип боп"
+        RawResponse = @"```json
+        {
+          ""results"": [
+            {
+              ""userId"": ""user_001"",
+              ""similarityPercent"": 85,
+              ""verdict"": ""correct"",
+              ""comment"": ""Ответ содержит ключевые понятия, но формулировка неполная.""
+            }
+          ]
+        }
+        ```"
     };
 }

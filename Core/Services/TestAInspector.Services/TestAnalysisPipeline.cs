@@ -5,6 +5,7 @@ using TestAInspector.Analysis.Contracts.Models;
 using TestAInspector.Entities.Models;
 using TestAInspector.Parsing.Contracts.Enums;
 using TestAInspector.Parsing.Contracts.Interfaces;
+using TestAInspector.Reporting.Contracts.Interfaces;
 using TestAInspector.Services.Contracts.Interfaces;
 using TestAInspector.Services.Contracts.Models;
 using TestAInspector.Validation.Contracts.Interfaces;
@@ -22,6 +23,8 @@ public class TestAnalysisPipeline : IPipelineService
     private readonly IDataValidator dataValidator;
     private readonly IQuestionBatchBuilder batchBuilder;
     private readonly ITestAnalysisAgent testAnalysisAgent;
+    private readonly IReportBuilder reportBuilder;
+    private readonly IReportExporter reportExporter;
 
     /// <summary>
     /// Инициализирует новый экземпляр <see cref="TestAnalysisPipeline"/>
@@ -30,13 +33,17 @@ public class TestAnalysisPipeline : IPipelineService
         IParserFactory parserFactory,
         IDataValidator dataValidator,
         IQuestionBatchBuilder batchBuilder,
-        ITestAnalysisAgent testAnalysisAgent)
+        ITestAnalysisAgent testAnalysisAgent,
+        IReportBuilder reportBuilder,
+        IReportExporter reportExporter)
     {
         this.formatDetector = formatDetector;
         this.parserFactory = parserFactory;
         this.dataValidator = dataValidator;
         this.batchBuilder = batchBuilder;
         this.testAnalysisAgent = testAnalysisAgent;
+        this.reportBuilder = reportBuilder;
+        this.reportExporter = reportExporter;
     }
 
     async Task<PipelineResult> IPipelineService.RunAsync(PipelineContext context)
@@ -84,7 +91,7 @@ public class TestAnalysisPipeline : IPipelineService
                 {
                     return new ComparisonResult { UserId = item.UserId, SimilarityPercent = 0, Verdict = "incorrect", Comment = "пустой ответ" };
                 }
-                return aiResults.First(r => r.UserId == item.UserId);
+                return aiResults.FirstOrDefault(r => r.UserId == item.UserId) ?? new ComparisonResult { UserId = item.UserId, SimilarityPercent = 50, Verdict = "partial" };
             }).ToList();
 
             allQuestionResults.Add(new QuestionAnalysisResult
@@ -94,9 +101,14 @@ public class TestAnalysisPipeline : IPipelineService
             });
         }
 
+        var reportData = await reportBuilder.BuildAsync(allQuestionResults, context.AnalysisMethod);
+        var excelBytes = reportExporter.ExportToExcel(reportData);
+
         return new PipelineResult()
         {
-            AnalysisData = allQuestionResults,
+            ReportData = reportData,
+            ExcelReport = excelBytes,
+            Errors = validationResult.Warnings.ToList()
         };
     }
 }

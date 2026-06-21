@@ -1,7 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TestAInspector.Analysis.Contracts.Enums;
+using TestAInspector.Api.Models;
 using TestAInspector.Parsing.Contracts.Exceptions;
-using TestAInspector.Reporting.Contracts.Interfaces;
 using TestAInspector.Reporting.Contracts.Models;
 using TestAInspector.Services.Contracts.Interfaces;
 using TestAInspector.Services.Contracts.Models;
@@ -16,15 +17,15 @@ namespace TestAInspector.Api.Controllers;
 public class AnalysisController : ControllerBase
 {
     private readonly IPipelineService pipeline;
-    private readonly IReportExporter reportExporter;
+    private readonly IMapper mapper;
 
     /// <summary>
     /// Инициализирует новый экземпляр <see cref="AnalysisController"/>
     /// </summary>
-    public AnalysisController(IPipelineService pipeline, IReportExporter reportExporter)
+    public AnalysisController(IPipelineService pipeline, IMapper mapper)
     {
         this.pipeline = pipeline;
-        this.reportExporter = reportExporter;
+        this.mapper = mapper;
     }
 
     /// <summary>
@@ -57,15 +58,13 @@ public class AnalysisController : ControllerBase
         try
         {
             var result = await pipeline.RunAsync(context);
-            //if (output == "excel")
-            //{
-            //    var exporter = new ReportExporter();
-            //    byte[] excel = exporter.ExportToExcel(report);
-            //    return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
-            //}
-            //return Ok(report); // JSON
+            if (output == "excel")
+            {
+                return File(result.ExcelReport, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
+            }
 
-            return Ok(result);
+            var mappedResult = mapper.Map<ReportDataApiModel>(result.ReportData);
+            return Ok(mappedResult);
         }
         catch (ParsingException ex)
         {

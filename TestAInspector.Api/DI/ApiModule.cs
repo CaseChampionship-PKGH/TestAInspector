@@ -1,6 +1,9 @@
-﻿using TestAInspector.Agent;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
+using TestAInspector.Agent;
 using TestAInspector.Agent.Contracts.Interfaces;
 using TestAInspector.Agent.YandexGPT;
+using TestAInspector.Api.AutoMappers;
 using TestAInspector.Common.Mvc.Extensions;
 using TestAInspector.Parsing;
 using TestAInspector.Parsing.Contracts.Interfaces;
@@ -11,27 +14,47 @@ using TestAInspector.Services;
 using TestAInspector.Validation;
 using Module = TestAInspector.Common.Mvc.Module;
 
-namespace TestAInspector.Api.DI
+namespace TestAInspector.Api.DI;
+
+/// <inheritdoc />
+public class ApiModule : Module
 {
     /// <inheritdoc />
-    public class ApiModule : Module
+    protected override void Load(IServiceCollection services)
     {
-        /// <inheritdoc />
-        protected override void Load(IServiceCollection services)
+        services.RegisterMultipleInterfacesAssignableTo<IDataParser, UserAnswersCsvParser>(ServiceLifetime.Singleton);
+        services.RegisterMultipleInterfacesAssignableTo<IDataParser, AgentResponseJsonParser>(ServiceLifetime.Singleton);
+        services.RegisterMultipleInterfacesAssignableTo<ILlmClient, YandexGPTllmClient>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<ParserFactory>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<FormatDetector>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<ExcelReportExporter>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<TestAnalysisPipeline>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<DataValidator>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<QuestionBatchBuilder>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<DefaultPromptProvider>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<LlmFactory>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<OpenAiTestAnalysisAgent>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<OpenAiReportAgent>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<AgentReportBuilder>(ServiceLifetime.Singleton);
+        services.RegisterAutoMapperProfile<TestAnalysisApiProfile>();
+        RegisterAutoMapper(services);
+        services.AddHttpContextAccessor();
+    }
+
+    private static void RegisterAutoMapper(IServiceCollection services)
+    {
+        services.AddSingleton(provider =>
         {
-            services.RegisterMultipleInterfacesAssignableTo<IDataParser, UserAnswersCsvParser>(ServiceLifetime.Singleton);
-            services.RegisterMultipleInterfacesAssignableTo<IDataParser, AgentResponseJsonParser>(ServiceLifetime.Singleton);
-            services.RegisterMultipleInterfacesAssignableTo<ILlmClient, YandexGPTllmClient>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<ParserFactory>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<FormatDetector>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<MockReportExporter>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<TestAnalysisPipeline>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<DataValidator>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<QuestionBatchBuilder>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<DefaultPromptProvider>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<LlmFactory>(ServiceLifetime.Singleton);
-            services.RegisterAsImplementedInterfaces<OpenAiTestAnalysisAgent>(ServiceLifetime.Singleton);
-            services.AddHttpContextAccessor();
-        }
+            var profiles = provider.GetServices<Profile>();
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                foreach (var profile in profiles)
+                {
+                    mc.AddProfile(profile);
+                }
+            }, NullLoggerFactory.Instance);
+            var mapper = mapperConfig.CreateMapper();
+            return mapper;
+        });
     }
 }

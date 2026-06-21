@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using TestAInspector.Agent.Contracts.Interfaces;
+using TestAInspector.Reporting.Contracts.Models;
+using TestAInspector.Services.Contracts.Constants;
 using TestAInspector.Validation.Contracts.Models.Batch;
 
 namespace TestAInspector.Agent;
@@ -39,6 +41,32 @@ public class DefaultPromptProvider : IPromptProvider
         sb.AppendLine("  ]");
         sb.AppendLine("}");
 
+        return sb.ToString();
+    }
+
+    string IPromptProvider.BuildReportGeneratingPrompt(Summary summary, List<string> criticalIssues, List<QuestionReport> questions)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("Ты — методист, анализирующий результаты тестирования.");
+        sb.AppendLine("Ниже представлена статистика ответов на тестовые задания.");
+        sb.AppendLine($"Всего вопросов: {summary.TotalQuestions}, пользователей: {summary.TotalUsers}.");
+        sb.AppendLine($"Средний процент правильных ответов: {summary.OverallCorrectPercentage}%.");
+        sb.AppendLine($"Критические вопросы (правильных ответов < {TestAnalysisConstants.PassGradePercent}%):");
+        foreach (var issue in criticalIssues)
+        {
+            sb.AppendLine("- " + issue);
+        }
+        sb.AppendLine("Самые частые проблемы по вопросам:");
+        foreach (var q in questions.Where(q => q.CommonMistakes.Any()))
+        {
+            sb.AppendLine($"Вопрос: {q.QuestionText.Take(100)}");
+            foreach (var m in q.CommonMistakes)
+            {
+                sb.AppendLine($"  - {m}");
+            }
+        }
+        sb.AppendLine("На основе этих данных напиши рекомендации по улучшению тестовых заданий (3-5 предложений).");
+        sb.AppendLine("Укажи, какие вопросы стоит пересмотреть, на что обратить внимание.");
         return sb.ToString();
     }
 }

@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TestAInspector.Api\TestAInspector.Api.csproj" />
+  </ItemGroup>
+
 </Project>

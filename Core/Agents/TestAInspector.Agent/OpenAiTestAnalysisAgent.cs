@@ -8,9 +8,7 @@ using TestAInspector.Validation.Contracts.Models.Batch;
 
 namespace TestAInspector.Agent;
 
-/// <summary>
-/// <inheritdoc cref="ITestAnalysisAgent"/>
-/// </summary>
+/// <inheritdoc cref="ITestAnalysisAgent"/> на базе Open AI
 public class OpenAiTestAnalysisAgent : ITestAnalysisAgent
 {
     private readonly IPromptProvider promptProvider;

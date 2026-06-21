@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Agents\TestAInspector.Agent.Contracts\TestAInspector.Agent.Contracts.csproj" />
+    <ProjectReference Include="..\..\Services\TestAInspector.Services.Contracts\TestAInspector.Services.Contracts.csproj" />
     <ProjectReference Include="..\TestAInspector.Reporting.Contracts\TestAInspector.Reporting.Contracts.csproj" />
   </ItemGroup>
 

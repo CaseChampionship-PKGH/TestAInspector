@@ -1,4 +1,4 @@
-﻿namespace TestAInspector.Web.Models;
+﻿namespace TestAInspector.Api.Models;
 
 /// <summary>
 /// Итоговый отчёт анализа тестовых заданий.

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace TestAInspector.Common.Mvc.Extensions;
@@ -89,9 +90,13 @@ public static class ServiceCollectionExtensions
     /// <param name="services"><inheritdoc cref="IServiceCollection"/></param>
     /// <param name="lifetime"><inheritdoc cref="ServiceLifetime"/></param>
     public static void RegisterMultipleInterfacesAssignableTo<TInterface, TService>(this IServiceCollection services, ServiceLifetime lifetime)
-    {
-        services.TryAddEnumerable(new ServiceDescriptor(typeof(TInterface), typeof(TService), lifetime));
-    }
+        => services.TryAddEnumerable(new ServiceDescriptor(typeof(TInterface), typeof(TService), lifetime));
+
+    /// <summary>
+    /// Регистрирует <see cref="Profile"/> автомапера
+    /// </summary>
+    public static void RegisterAutoMapperProfile<TProfile>(this IServiceCollection services) where TProfile : Profile
+        => services.AddSingleton<Profile, TProfile>();
 
     /// <summary>
     /// Регистрирует интерфейс указанного типа

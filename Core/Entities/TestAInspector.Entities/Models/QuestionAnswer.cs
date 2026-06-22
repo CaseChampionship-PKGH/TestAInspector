@@ -16,7 +16,7 @@ public class QuestionAnswer
     public string Type { get; set; } = string.Empty;
 
     /// <summary>
-    /// Ответ пользователя
+    /// Ответ тестируемого
     /// </summary>
     public string UserAnswer { get; set; } = string.Empty;
 

@@ -35,19 +35,17 @@ public class AnalysisController : ControllerBase
     public async Task<IActionResult> RunAnalysis(
         IFormFile userAnswers,
         IFormFile referenceAnswers,
-        [FromQuery] AnalysisMethod analysisMethod = AnalysisMethod.RussianAiAgent,
-        [FromQuery] string output = "json")
+        [FromQuery] AnalysisMethod analysisMethod = AnalysisMethod.RussianAiAgent)
     {
         if (userAnswers == null || userAnswers.Length == 0)
         {
-            return BadRequest("Файл с ответами пользователей обязателен.");
+            return BadRequest("Файл с ответами тестируемых обязателен.");
         }
         if (referenceAnswers == null || referenceAnswers.Length == 0)
         {
             return BadRequest("Файл с эталонными ответами обязателен.");
         }
 
-        // Формирование контекста конвейера
         var context = new PipelineContext
         {
             UserAnswersStream = userAnswers.OpenReadStream(),
@@ -58,11 +56,6 @@ public class AnalysisController : ControllerBase
         try
         {
             var result = await pipeline.RunAsync(context);
-            if (output == "excel")
-            {
-                return File(result.ExcelReport, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
-            }
-
             var mappedResult = mapper.Map<ReportDataApiModel>(result.ReportData);
             return Ok(mappedResult);
         }
@@ -80,12 +73,11 @@ public class AnalysisController : ControllerBase
     /// Экспорт отчёта в Excel (.xlsx) с подсветкой отклонений.
     /// </summary>
     [HttpPost("export/excel")]
-    public IActionResult ExportToExcel([FromBody] ReportData report)
+    public async Task<IActionResult> ExportToExcel([FromBody] ReportDataApiModel reportModel)
     {
-        //var exporter = new ReportExporter(); // из Reporting
-        //var bytes = exporter.ExportToExcel(report);
-        //return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
-        return Ok();
+        var domainReport = mapper.Map<ReportData>(reportModel);
+        var excelBytes = await pipeline.ExportReportExcel(domainReport);
+        return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
     }
 
     /// <summary>

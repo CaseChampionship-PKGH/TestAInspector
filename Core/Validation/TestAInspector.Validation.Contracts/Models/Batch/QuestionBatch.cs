@@ -11,7 +11,7 @@ public record QuestionBatch
     public QuestionReference Question { get; set; } = null!;
 
     /// <summary>
-    /// Ответы пользователей
+    /// Ответы тестируемых
     /// </summary>
     public List<UserAnswerItem> Answers { get; set; } = null!;
 }

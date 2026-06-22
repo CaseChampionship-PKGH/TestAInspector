@@ -4,7 +4,6 @@
 @rendermode InteractiveServer
 @using TestAInspector.Api.Models
 @using System.Text
-@using System.Text.Json
 
 <PageTitle>Анализ тестов</PageTitle>
 
@@ -20,7 +19,7 @@
 
 					<div class="mb-3">
 						<label class="form-label fw-bold">
-							Файл с ответами пользователей <span class="text-danger">*</span>
+							Файл с ответами тестируемых <span class="text-danger">*</span>
 						</label>
 						<InputFile OnChange="HandleUserFile" class="form-control" accept=".json,.csv,.zip" />
 						@if (userFile != null)
@@ -97,7 +96,7 @@
 							<div class="col-sm-6">
 								<div class="p-3 rounded" style="background-color: #fff8e7;">
 									<div class="fs-4 fw-bold">@analysisResult.Summary.TotalUsers</div>
-									<small class="text-muted">Пользователей</small>
+									<small class="text-muted">Тестируемых</small>
 								</div>
 							</div>
 							<div class="col-sm-6">
@@ -153,6 +152,8 @@
 	private bool isLoading;
 	private string? errorMessage;
 	private ReportDataApiModel? analysisResult;
+	private string? reportDataJson;
+	private ReportDataApiModel? reportDataObject;
 
 	private void HandleUserFile(InputFileChangeEventArgs e) => userFile = e.File;
 	private void HandleRefFile(InputFileChangeEventArgs e) => refFile = e.File;
@@ -161,7 +162,7 @@
 	{
 		if (userFile == null)
 		{
-			errorMessage = "Не выбран файл с ответами пользователей.";
+			errorMessage = "Не выбран файл с ответами тестируемых.";
 			return;
 		}
 
@@ -186,14 +187,17 @@
 			}
 
 			var analysisMethodInt = selectedVariant == "russian" ? 0 : 1;
-			var requestUri = $"api/analysis/run?analysisMethod={analysisMethodInt}&output=json";
+			var requestUri = $"api/analysis/run?analysisMethod={analysisMethodInt}";
 			var response = await Http.PostAsync(requestUri, formData);
 
 			if (response.IsSuccessStatusCode)
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				analysisResult = JsonSerializer.Deserialize<ReportDataApiModel>(json,
-					new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+				reportDataJson = await response.Content.ReadAsStringAsync();
+				reportDataObject = System.Text.Json.JsonSerializer.Deserialize<ReportDataApiModel>(
+					reportDataJson,
+					new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+				analysisResult = reportDataObject;
 			}
 			else
 			{
@@ -212,30 +216,29 @@
 		}
 	}
 
+	private async Task DownloadJson()
+	{
+		if (reportDataJson == null) return;
+		byte[] bytes = Encoding.UTF8.GetBytes(reportDataJson);
+		using var stream = new MemoryStream(bytes);
+		using var streamRef = new DotNetStreamReference(stream);
+		await JS.InvokeVoidAsync("downloadFileFromStream", streamRef, "report.json");
+	}
+
 	private async Task DownloadExcel()
 	{
-		if (analysisResult == null) return;
-		var response = await Http.PostAsJsonAsync("api/analysis/export/excel", analysisResult);
+		if (reportDataObject == null) return;
+		var response = await Http.PostAsJsonAsync("api/analysis/export/excel", reportDataObject);
 		if (response.IsSuccessStatusCode)
 		{
 			var bytes = await response.Content.ReadAsByteArrayAsync();
 			using var stream = new MemoryStream(bytes);
 			using var streamRef = new DotNetStreamReference(stream);
-			await JS.InvokeVoidAsync("downloadFileFromStream", streamRef);
+			await JS.InvokeVoidAsync("downloadFileFromStream", streamRef, "report.xlsx");
 		}
 		else
 		{
-			errorMessage = "Ошибка при скачивании Excel-отчёта.";
+			errorMessage = "Не удалось скачать Excel-отчёт.";
 		}
-	}
-
-	private async Task DownloadJson()
-	{
-		if (analysisResult == null) return;
-		var bytes = Encoding.UTF8.GetBytes(
-			JsonSerializer.Serialize(analysisResult, new JsonSerializerOptions { WriteIndented = true }));
-		using var stream = new MemoryStream(bytes);
-		using var streamRef = new DotNetStreamReference(stream);
-		await JS.InvokeVoidAsync("downloadFileFromStream", streamRef);
 	}
 }

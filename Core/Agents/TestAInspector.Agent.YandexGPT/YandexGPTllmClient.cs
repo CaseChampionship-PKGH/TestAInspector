@@ -1,29 +1,85 @@
-﻿using TestAInspector.Agent.Contracts.Enums;
+﻿using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using TestAInspector.Agent.Contracts.Enums;
 using TestAInspector.Agent.Contracts.Interfaces;
 using TestAInspector.Agent.Contracts.Models;
+using TestAInspector.Agent.YandexGPT.Models;
 
 namespace TestAInspector.Agent.YandexGPT;
 
-/// <summary>
 /// <inheritdoc cref="ILlmClient"/> на основе YandexGPT
-/// </summary>
 public class YandexGPTllmClient : ILlmClient
 {
+    private readonly HttpClient httpClient;
+    private readonly string apiKey;
+    private readonly string baseUrl;
+    private readonly string model;
+    private readonly string folderId;
+
     LlmVariant ILlmClient.LlmVariant => LlmVariant.Russian;
 
-    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest request) => new()
+    /// <summary>
+    /// Инициализирует новый экземпляр <see cref="YandexGPTllmClient"/>
+    /// </summary>
+    public YandexGPTllmClient(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
-        RawResponse = @"```json
+        httpClient = httpClientFactory.CreateClient("YandexGPT");
+        baseUrl = config.GetRequiredSection("RussanLLM").GetValue<string>("BaseUrl")!;
+        model = config.GetRequiredSection("RussanLLM").GetValue<string>("Model")!;
+        apiKey = config.GetRequiredSection("RussanLLM").GetValue<string>("ApiKey")!;
+        folderId = config.GetRequiredSection("RussanLLM").GetValue<string>("FolderId")!;
+    }
+
+    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest llmRequest)
+    {
+        var request = new YandexGptRequest
         {
-          ""results"": [
+            ModelUri = $"gpt://{folderId}/{model}",
+            CompletionOptions = new CompletionOptions
             {
-              ""userId"": ""user_001"",
-              ""similarityPercent"": 85,
-              ""verdict"": ""correct"",
-              ""comment"": ""Ответ содержит ключевые понятия, но формулировка неполная.""
-            }
-          ]
-        }
-        ```"
-    };
+                Stream = false,
+                Temperature = 0,
+                MaxTokens = "2000"
+            },
+            Messages =
+            [
+                new Message { Role = "system", Text = "Ты — эксперт по проверке тестовых заданий." },
+                new Message { Role = "user", Text = llmRequest.RawPrompt }
+            ]
+        };
+
+        var json = JsonSerializer.Serialize(request);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        httpClient.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Api-Key", apiKey);
+
+        var response = await httpClient.PostAsync(baseUrl, content);
+
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<YandexGptResponse>(responseBody);
+
+        return new LlmResponse()
+        {
+            RawResponse = result?.Result?.Alternatives?.FirstOrDefault()?.Message?.Text
+                ?? throw new InvalidOperationException("Пустой ответ от YandexGPT")
+        };
+    }
+    //    => new()
+    //{
+    //    RawResponse = @"```json
+    //    {
+    //      ""results"": [
+    //        {
+    //          ""userId"": ""user_001"",
+    //          ""similarityPercent"": 85,
+    //          ""verdict"": ""correct"",
+    //          ""comment"": ""Ответ содержит ключевые понятия, но формулировка неполная.""
+    //        }
+    //      ]
+    //    }
+    //    ```"
+    //};
 }

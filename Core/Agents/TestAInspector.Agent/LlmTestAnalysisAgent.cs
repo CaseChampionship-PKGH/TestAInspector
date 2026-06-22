@@ -8,17 +8,17 @@ using TestAInspector.Validation.Contracts.Models.Batch;
 
 namespace TestAInspector.Agent;
 
-/// <inheritdoc cref="ITestAnalysisAgent"/> на базе Open AI
-public class OpenAiTestAnalysisAgent : ITestAnalysisAgent
+/// <inheritdoc cref="ITestAnalysisAgent"/> на базе искуственного интелекта LLM
+public class LlmTestAnalysisAgent : ITestAnalysisAgent
 {
     private readonly IPromptProvider promptProvider;
     private readonly IParserFactory parserFactory;
-    private readonly ILlmFactory llmFactory; // абстракция над HttpClient/OpenAI SDK
+    private readonly ILlmFactory llmFactory;
 
     /// <summary>
-    /// Инициализирует новый экземпляр <see cref="OpenAiTestAnalysisAgent"/>
+    /// Инициализирует новый экземпляр <see cref="LlmTestAnalysisAgent"/>
     /// </summary>
-    public OpenAiTestAnalysisAgent(IPromptProvider promptProvider,
+    public LlmTestAnalysisAgent(IPromptProvider promptProvider,
         IParserFactory parserFactory,
         ILlmFactory llmFactory)
     {

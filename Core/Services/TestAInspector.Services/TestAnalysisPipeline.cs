@@ -6,6 +6,7 @@ using TestAInspector.Entities.Models;
 using TestAInspector.Parsing.Contracts.Enums;
 using TestAInspector.Parsing.Contracts.Interfaces;
 using TestAInspector.Reporting.Contracts.Interfaces;
+using TestAInspector.Reporting.Contracts.Models;
 using TestAInspector.Services.Contracts.Interfaces;
 using TestAInspector.Services.Contracts.Models;
 using TestAInspector.Validation.Contracts.Interfaces;
@@ -110,5 +111,11 @@ public class TestAnalysisPipeline : IPipelineService
             ExcelReport = excelBytes,
             Errors = validationResult.Warnings.ToList()
         };
+    }
+
+    async Task<byte[]> IPipelineService.ExportReportExcel(ReportData reportData)
+    {
+        var excelBytes = reportExporter.ExportToExcel(reportData);
+        return excelBytes;
     }
 }

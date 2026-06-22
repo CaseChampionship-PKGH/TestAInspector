@@ -9,7 +9,7 @@ namespace TestAInspector.Validation.Contracts.Interfaces;
 public interface IQuestionBatchBuilder
 {
     /// <summary>
-    /// Перестроить данные от «пользователь-центричного» вида к «вопрос-центричным» батчам,
+    /// Перестроить данные от «тестируемый-центричного» вида к «вопрос-центричным» батчам,
     /// попутно выполнив предварительную классификацию ответов (ExactMatch / Empty / NeedAnalysis
     /// </summary>
     List<QuestionBatch> Build(ValidationResult validationResult);

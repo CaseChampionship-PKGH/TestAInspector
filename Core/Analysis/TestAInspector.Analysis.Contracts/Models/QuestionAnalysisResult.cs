@@ -13,7 +13,7 @@ public class QuestionAnalysisResult
     public QuestionReference Question { get; set; } = null!;
 
     /// <summary>
-    /// Ответы пользователей
+    /// Ответы тестируемых
     /// </summary>
     public List<ComparisonResult> Results { get; set; } = null!;
 }

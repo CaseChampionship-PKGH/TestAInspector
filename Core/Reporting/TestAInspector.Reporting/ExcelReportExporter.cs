@@ -23,7 +23,7 @@ public class ExcelReportExporter : IReportExporter
         ws.Cell(3, 1).Style.Font.Bold = true;
         ws.Cell(4, 1).Value = "Всего вопросов";
         ws.Cell(4, 2).Value = report.Summary.TotalQuestions;
-        ws.Cell(5, 1).Value = "Всего пользователей";
+        ws.Cell(5, 1).Value = "Всего тестируемых";
         ws.Cell(5, 2).Value = report.Summary.TotalUsers;
         ws.Cell(6, 1).Value = "Ср. % правильных";
         ws.Cell(6, 2).Value = report.Summary.OverallCorrectPercentage / 100;

@@ -8,12 +8,12 @@ namespace TestAInspector.Validation.Contracts.Models.Batch;
 public class UserAnswerItem
 {
     /// <summary>
-    /// Идентфикатор пользователя
+    /// Идентфикатор тестируемого
     /// </summary>
     public string UserId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Исходный ответ пользователя
+    /// Исходный ответ тестируемого
     /// </summary>
     public string RawAnswer { get; set; } = string.Empty;
 

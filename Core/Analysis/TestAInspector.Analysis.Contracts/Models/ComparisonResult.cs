@@ -6,7 +6,7 @@
 public class ComparisonResult
 {
     /// <summary>
-    /// Идентфикатор пользователя
+    /// Идентфикатор тестируемого
     /// </summary>
     public string UserId { get; set; } = string.Empty;
 

@@ -67,7 +67,7 @@ public class AgentReportBuilder : IReportBuilder
 
         var criticalIssues = questionReports
             .Where(q => q.IsCritical)
-            .Select(q => $"Вопрос: \"{q.QuestionText.Take(80)}\" – правильных ответов: {q.CorrectPercentage}%")
+            .Select(q => $"Вопрос: \"{Truncate(q.QuestionText, 80)}\" – правильных ответов: {q.CorrectPercentage}%")
             .ToList();
 
         var totalQuestions = questionReports.Count;
@@ -91,4 +91,7 @@ public class AgentReportBuilder : IReportBuilder
 
         return reportData;
     }
+
+    private static string? Truncate(string? value, int maxLength) =>
+        value == null ? null : value.Length <= maxLength ? value : value[..maxLength];
 }

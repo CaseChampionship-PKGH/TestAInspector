@@ -21,7 +21,7 @@ public class QuestionReportApiModel
     public string Type { get; set; } = string.Empty;
 
     /// <summary>
-    /// Общее количество ответов пользователей на этот вопрос (после фильтрации).
+    /// Общее количество ответов тестируемых на этот вопрос (после фильтрации).
     /// </summary>
     public int TotalAnswers { get; set; }
 

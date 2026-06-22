@@ -6,7 +6,7 @@
 public class ValidatedUserTestResult
 {
     /// <summary>
-    /// Идентификатор пользователя
+    /// Идентификатор тестируемого
     /// </summary>
     public string UserId { get; set; } = string.Empty;
 
@@ -31,7 +31,7 @@ public class ValidatedUserTestResult
     public int MaxScore { get; set; }
 
     /// <summary>
-    /// Ответы пользователя
+    /// Ответы тестируемого
     /// </summary>
     public List<ValidatedQuestionAnswer> Answers { get; set; } = null!;
 }

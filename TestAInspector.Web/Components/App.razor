@@ -17,13 +17,13 @@
     <Routes />
     <script src="_framework/blazor.web.js"></script>
 	<script>
-		window.downloadFileFromStream = async (streamRef) => {
+		window.downloadFileFromStream = async (streamRef, fileName) => {
 			const arrayBuffer = await streamRef.arrayBuffer();
-			const blob = new Blob([arrayBuffer], { type: streamRef.contentType });
+			const blob = new Blob([arrayBuffer], { type: 'application/octet-stream' });
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.href = url;
-			a.download = streamRef.fileName;
+			a.download = fileName;
 			a.click();
 			URL.revokeObjectURL(url);
 		}

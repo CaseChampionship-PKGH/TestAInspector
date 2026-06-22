@@ -9,7 +9,7 @@ using TestAInspector.Parsing.Contracts.Interfaces;
 namespace TestAInspector.Parsing.Csv;
 
 /// <summary>
-/// Csv парсер тестов пользователей
+/// Csv парсер тестов тестируемых
 /// </summary>
 public class UserAnswersCsvParser : IDataParser
 {

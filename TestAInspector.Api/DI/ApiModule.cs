@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using TestAInspector.Agent;
 using TestAInspector.Agent.Contracts.Interfaces;
+using TestAInspector.Agent.DeepSeek;
 using TestAInspector.Agent.YandexGPT;
 using TestAInspector.Api.AutoMappers;
 using TestAInspector.Common.Mvc.Extensions;
@@ -24,7 +25,16 @@ public class ApiModule : Module
     {
         services.RegisterMultipleInterfacesAssignableTo<IDataParser, UserAnswersCsvParser>(ServiceLifetime.Singleton);
         services.RegisterMultipleInterfacesAssignableTo<IDataParser, AgentResponseJsonParser>(ServiceLifetime.Singleton);
+
+        services.AddHttpClient("YandexGPT", client =>
+        {
+            client.BaseAddress = new Uri("https://llm.api.cloud.yandex.net/");
+        });
         services.RegisterMultipleInterfacesAssignableTo<ILlmClient, YandexGPTllmClient>(ServiceLifetime.Singleton);
+
+        services.AddHttpClient("DeepSeek");
+        services.RegisterMultipleInterfacesAssignableTo<ILlmClient, DeepSeekLlmClient>(ServiceLifetime.Singleton);
+
         services.RegisterAsImplementedInterfaces<ParserFactory>(ServiceLifetime.Singleton);
         services.RegisterAsImplementedInterfaces<FormatDetector>(ServiceLifetime.Singleton);
         services.RegisterAsImplementedInterfaces<ExcelReportExporter>(ServiceLifetime.Singleton);
@@ -33,8 +43,8 @@ public class ApiModule : Module
         services.RegisterAsImplementedInterfaces<QuestionBatchBuilder>(ServiceLifetime.Singleton);
         services.RegisterAsImplementedInterfaces<DefaultPromptProvider>(ServiceLifetime.Singleton);
         services.RegisterAsImplementedInterfaces<LlmFactory>(ServiceLifetime.Singleton);
-        services.RegisterAsImplementedInterfaces<OpenAiTestAnalysisAgent>(ServiceLifetime.Singleton);
-        services.RegisterAsImplementedInterfaces<OpenAiReportAgent>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<LlmTestAnalysisAgent>(ServiceLifetime.Singleton);
+        services.RegisterAsImplementedInterfaces<LlmReportAgent>(ServiceLifetime.Singleton);
         services.RegisterAsImplementedInterfaces<AgentReportBuilder>(ServiceLifetime.Singleton);
         services.RegisterAutoMapperProfile<TestAnalysisApiProfile>();
         RegisterAutoMapper(services);

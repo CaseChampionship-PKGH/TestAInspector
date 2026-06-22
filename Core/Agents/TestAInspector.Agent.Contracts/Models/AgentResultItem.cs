@@ -1,12 +1,12 @@
 ﻿namespace TestAInspector.Agent.Contracts.Models;
 
 /// <summary>
-/// Сведения о ответе пользователя
+/// Сведения о ответе тестируемого
 /// </summary>
 public class AgentResultItem
 {
     /// <summary>
-    /// Идентфикатор пользователя
+    /// Идентфикатор тестируемого
     /// </summary>
     public string UserId { get; set; } = string.Empty;
 

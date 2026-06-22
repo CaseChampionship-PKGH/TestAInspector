@@ -5,16 +5,16 @@ using TestAInspector.Reporting.Contracts.Models;
 
 namespace TestAInspector.Agent;
 
-/// <inheritdoc cref="IReportAgent"/> на базе Open AI
-public class OpenAiReportAgent : IReportAgent
+/// <inheritdoc cref="IReportAgent"/> на базе искуственного интелекта LLM
+public class LlmReportAgent : IReportAgent
 {
     private readonly IPromptProvider promptProvider;
-    private readonly ILlmFactory llmFactory; // абстракция над HttpClient/OpenAI SDK
+    private readonly ILlmFactory llmFactory;
 
     /// <summary>
-    /// Инициализирует новый экземпляр <see cref="OpenAiReportAgent"/>
+    /// Инициализирует новый экземпляр <see cref="LlmReportAgent"/>
     /// </summary>
-    public OpenAiReportAgent(IPromptProvider promptProvider,
+    public LlmReportAgent(IPromptProvider promptProvider,
         ILlmFactory llmFactory)
     {
         this.promptProvider = promptProvider;

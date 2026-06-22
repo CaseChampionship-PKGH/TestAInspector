@@ -11,7 +11,7 @@ public class Summary
     public int TotalQuestions { get; set; }
 
     /// <summary>
-    /// Общее количество пользователей, чьи ответы анализировались.
+    /// Общее количество тестируемых, чьи ответы анализировались.
     /// </summary>
     public int TotalUsers { get; set; }
 

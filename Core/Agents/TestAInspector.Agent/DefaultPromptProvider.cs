@@ -16,8 +16,8 @@ public class DefaultPromptProvider : IPromptProvider
         var sb = new StringBuilder();
 
         sb.AppendLine("Ты — эксперт по проверке тестовых заданий.");
-        sb.AppendLine("Дан вопрос, эталонный ответ и список ответов пользователей.");
-        sb.AppendLine("Для каждого пользователя определи:");
+        sb.AppendLine("Дан вопрос, эталонный ответ и список ответов тестируемых.");
+        sb.AppendLine("Для каждого тестируемого определи:");
         sb.AppendLine("- процент совпадения с эталоном (0-100)");
         sb.AppendLine("- вердикт: correct / partial / incorrect");
         sb.AppendLine("- краткое обоснование (1 предложение на русском)");
@@ -25,7 +25,7 @@ public class DefaultPromptProvider : IPromptProvider
         sb.AppendLine($"Вопрос: {batch.Question.QuestionText}");
         sb.AppendLine($"Тип вопроса: {batch.Question.Type}");
         sb.AppendLine($"Правильный ответ: {batch.Question.CorrectAnswer}");
-        sb.AppendLine("Ответы пользователей:");
+        sb.AppendLine("Ответы тестируемых:");
 
         foreach (var answer in batch.Answers)
         {
@@ -49,7 +49,7 @@ public class DefaultPromptProvider : IPromptProvider
         var sb = new StringBuilder();
         sb.AppendLine("Ты — методист, анализирующий результаты тестирования.");
         sb.AppendLine("Ниже представлена статистика ответов на тестовые задания.");
-        sb.AppendLine($"Всего вопросов: {summary.TotalQuestions}, пользователей: {summary.TotalUsers}.");
+        sb.AppendLine($"Всего вопросов: {summary.TotalQuestions}, тестируемых: {summary.TotalUsers}.");
         sb.AppendLine($"Средний процент правильных ответов: {summary.OverallCorrectPercentage}%.");
         sb.AppendLine($"Критические вопросы (правильных ответов < {TestAnalysisConstants.PassGradePercent}%):");
         foreach (var issue in criticalIssues)
@@ -59,7 +59,7 @@ public class DefaultPromptProvider : IPromptProvider
         sb.AppendLine("Самые частые проблемы по вопросам:");
         foreach (var q in questions.Where(q => q.CommonMistakes.Any()))
         {
-            sb.AppendLine($"Вопрос: {q.QuestionText.Take(100)}");
+            sb.AppendLine($"Вопрос: {Truncate(q.QuestionText, 100)}");
             foreach (var m in q.CommonMistakes)
             {
                 sb.AppendLine($"  - {m}");
@@ -69,5 +69,8 @@ public class DefaultPromptProvider : IPromptProvider
         sb.AppendLine("Укажи, какие вопросы стоит пересмотреть, на что обратить внимание.");
         return sb.ToString();
     }
+
+    private static string? Truncate(string? value, int maxLength) =>
+        value == null ? null : value.Length <= maxLength ? value : value[..maxLength];
 }
 

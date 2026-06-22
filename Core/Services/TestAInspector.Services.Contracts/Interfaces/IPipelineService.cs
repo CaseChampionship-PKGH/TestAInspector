@@ -1,4 +1,5 @@
-﻿using TestAInspector.Services.Contracts.Models;
+﻿using TestAInspector.Reporting.Contracts.Models;
+using TestAInspector.Services.Contracts.Models;
 
 namespace TestAInspector.Services.Contracts.Interfaces;
 
@@ -11,4 +12,9 @@ public interface IPipelineService
     /// Валидировать результаты теста
     /// </summary>
     Task<PipelineResult> RunAsync(PipelineContext context);
+
+    /// <summary>
+    /// Экспортировать отчёт в Excel
+    /// </summary>
+    Task<byte[]> ExportReportExcel(ReportData reportData);
 }

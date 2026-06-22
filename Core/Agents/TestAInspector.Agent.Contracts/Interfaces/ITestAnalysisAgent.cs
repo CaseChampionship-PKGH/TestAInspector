@@ -10,7 +10,7 @@ namespace TestAInspector.Agent.Contracts.Interfaces;
 public interface ITestAnalysisAgent
 {
     /// <summary>
-    /// Сравнить правильность ответа пользователя
+    /// Сравнить правильность ответа тестируемого
     /// </summary>
     Task<AgentBatchResponse> AnalyzeBatchAsync(QuestionBatch questionBatch, LlmVariant llmVariant);
 }

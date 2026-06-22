@@ -6,7 +6,7 @@
 public enum ParsingTarget
 {
     /// <summary>
-    /// Тесты пользователей
+    /// Тесты тестируемых
     /// </summary>
     UserAnswers,
 

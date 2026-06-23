@@ -24,9 +24,9 @@ public class LlmFactory : ILlmFactory
 
     ILlmClient ILlmFactory.CreateLLmClient(LlmVariant variant)
     {
-        if (llmClients.TryGetValue(variant, out var parser))
+        if (llmClients.TryGetValue(variant, out var client))
         {
-            return parser;
+            return client;
         }
 
         throw new ParsingException($"ИИ-агент группы {variant} не найден.");

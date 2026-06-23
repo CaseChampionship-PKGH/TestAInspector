@@ -15,6 +15,7 @@ public class DeepSeekLlmClient : ILlmClient
     private readonly HttpClient httpClient;
     private readonly string apiKey;
     private readonly string baseUrl;
+    private readonly string requestUri;
     private readonly string model;
 
     LlmVariant ILlmClient.LlmVariant => LlmVariant.Foreign;
@@ -27,6 +28,7 @@ public class DeepSeekLlmClient : ILlmClient
         httpClient = httpClientFactory.CreateClient("DeepSeek");
         baseUrl = config.GetRequiredSection("ForeignLLM").GetValue<string>("BaseUrl")!;
         apiKey = config.GetRequiredSection("ForeignLLM").GetValue<string>("ApiKey")!;
+        requestUri = config.GetRequiredSection("ForeignLLM").GetValue<string>("RequestUri")!;
         model = config.GetRequiredSection("ForeignLLM").GetValue<string>("Model")!;
     }
 
@@ -47,12 +49,13 @@ public class DeepSeekLlmClient : ILlmClient
         };
 
         var json = JsonSerializer.Serialize(request);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri)
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json")
+        };
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Api-Key", apiKey);
 
-        httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", apiKey);
-
-        var response = await httpClient.PostAsync("chat/completions", content);
+        var response = await httpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();
 
         var body = await response.Content.ReadAsStringAsync();

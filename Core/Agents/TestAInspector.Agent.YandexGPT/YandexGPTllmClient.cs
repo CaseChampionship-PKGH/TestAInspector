@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using TestAInspector.Agent.Contracts.Enums;
@@ -15,6 +16,7 @@ public class YandexGPTllmClient : ILlmClient
     private readonly string apiKey;
     private readonly string baseUrl;
     private readonly string model;
+    private readonly string requestUri;
     private readonly string folderId;
 
     LlmVariant ILlmClient.LlmVariant => LlmVariant.Russian;
@@ -25,10 +27,11 @@ public class YandexGPTllmClient : ILlmClient
     public YandexGPTllmClient(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
         httpClient = httpClientFactory.CreateClient("YandexGPT");
-        baseUrl = config.GetRequiredSection("RussanLLM").GetValue<string>("BaseUrl")!;
-        model = config.GetRequiredSection("RussanLLM").GetValue<string>("Model")!;
-        apiKey = config.GetRequiredSection("RussanLLM").GetValue<string>("ApiKey")!;
-        folderId = config.GetRequiredSection("RussanLLM").GetValue<string>("FolderId")!;
+        baseUrl = config.GetRequiredSection("RussianLLM").GetValue<string>("BaseUrl")!;
+        model = config.GetRequiredSection("RussianLLM").GetValue<string>("Model")!;
+        requestUri = config.GetRequiredSection("ForeignLLM").GetValue<string>("RequestUri")!;
+        apiKey = config.GetRequiredSection("RussianLLM").GetValue<string>("ApiKey")!;
+        folderId = config.GetRequiredSection("RussianLLM").GetValue<string>("FolderId")!;
     }
 
     async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest llmRequest)
@@ -50,12 +53,13 @@ public class YandexGPTllmClient : ILlmClient
         };
 
         var json = JsonSerializer.Serialize(request);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, requestUri)
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json")
+        };
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Api-Key", apiKey);
 
-        httpClient.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Api-Key", apiKey);
-
-        var response = await httpClient.PostAsync(baseUrl, content);
+        var response = await httpClient.SendAsync(requestMessage);
 
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();

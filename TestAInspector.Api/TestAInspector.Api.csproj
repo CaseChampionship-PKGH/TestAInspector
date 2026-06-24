@@ -12,9 +12,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\TestAInspector.Common.Mvc\TestAInspector.Common.Mvc.csproj" />
-    <ProjectReference Include="..\Core\Agents\TestAInspector.Agent.DeepSeek\TestAInspector.Agent.DeepSeek.csproj" />
+    <ProjectReference Include="..\Core\Agents\TestAInspector.Agent.OpenAI\TestAInspector.Agent.OpenAI.csproj" />
     <ProjectReference Include="..\Core\Agents\TestAInspector.Agent.YandexGPT\TestAInspector.Agent.YandexGPT.csproj" />
     <ProjectReference Include="..\Core\Agents\TestAInspector.Agent\TestAInspector.Agent.csproj" />
+    <ProjectReference Include="..\Core\Parsing\TestAInspector.Parsing.Archive\TestAInspector.Parsing.Archive.csproj" />
     <ProjectReference Include="..\Core\Parsing\TestAInspector.Parsing.Csv\TestAInspector.Parsing.Csv.csproj" />
     <ProjectReference Include="..\Core\Parsing\TestAInspector.Parsing.Json\TestAInspector.Parsing.Json.csproj" />
     <ProjectReference Include="..\Core\Parsing\TestAInspector.Parsing\TestAInspector.Parsing.csproj" />

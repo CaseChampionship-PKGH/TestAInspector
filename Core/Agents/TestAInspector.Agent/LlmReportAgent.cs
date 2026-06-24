@@ -28,7 +28,7 @@ public class LlmReportAgent : IReportAgent
         var recommendations = await llmClient.SendRequestAsync(new LlmRequest()
         {
             RawPrompt = prompt
-        });
+        }, "report");
 
         return new ReportData
         {

@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TestAInspector.Agent.DeepSeek.Models;
+namespace TestAInspector.Agent.OpenAI.Models;
 
 /// <summary>
-/// Ответ ллм модели от DeepSeek
+/// Ответ ллм модели от OpenAI
 /// </summary>
-internal class DeepSeekCompatibleResponse
+internal class OpenAICompatibleResponse
 {
     [JsonPropertyName("choices")]
     public List<Choice> Choices { get; set; } = null!;

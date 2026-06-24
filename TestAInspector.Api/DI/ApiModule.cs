@@ -2,11 +2,12 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using TestAInspector.Agent;
 using TestAInspector.Agent.Contracts.Interfaces;
-using TestAInspector.Agent.DeepSeek;
+using TestAInspector.Agent.OpenAI;
 using TestAInspector.Agent.YandexGPT;
 using TestAInspector.Api.AutoMappers;
 using TestAInspector.Common.Mvc.Extensions;
 using TestAInspector.Parsing;
+using TestAInspector.Parsing.Archive;
 using TestAInspector.Parsing.Contracts.Interfaces;
 using TestAInspector.Parsing.Csv;
 using TestAInspector.Parsing.Json;
@@ -23,7 +24,12 @@ public class ApiModule : Module
     /// <inheritdoc />
     protected override void Load(IServiceCollection services)
     {
+        services.AddSingleton<UserAnswersCsvParser>();
+        services.AddSingleton<UserAnswersJsonParser>();
+        services.AddSingleton<UserAnswersArchiveParser>();
         services.RegisterMultipleInterfacesAssignableTo<IDataParser, UserAnswersCsvParser>(ServiceLifetime.Singleton);
+        services.RegisterMultipleInterfacesAssignableTo<IDataParser, UserAnswersJsonParser>(ServiceLifetime.Singleton);
+        services.RegisterMultipleInterfacesAssignableTo<IDataParser, UserAnswersArchiveParser>(ServiceLifetime.Singleton);
         services.RegisterMultipleInterfacesAssignableTo<IDataParser, AgentResponseJsonParser>(ServiceLifetime.Singleton);
 
         services.AddHttpClient("YandexGPT", client =>
@@ -32,8 +38,11 @@ public class ApiModule : Module
         });
         services.RegisterMultipleInterfacesAssignableTo<ILlmClient, YandexGPTllmClient>(ServiceLifetime.Singleton);
 
-        services.AddHttpClient("DeepSeek");
-        services.RegisterMultipleInterfacesAssignableTo<ILlmClient, DeepSeekLlmClient>(ServiceLifetime.Singleton);
+        services.AddHttpClient("OpenAI", client =>
+        {
+            client.BaseAddress = new Uri("https://openrouter.ai/api/v1/");
+        });
+        services.RegisterMultipleInterfacesAssignableTo<ILlmClient, OpenAiCompatibleLlmClient>(ServiceLifetime.Singleton);
 
         services.RegisterAsImplementedInterfaces<ParserFactory>(ServiceLifetime.Singleton);
         services.RegisterAsImplementedInterfaces<FormatDetector>(ServiceLifetime.Singleton);

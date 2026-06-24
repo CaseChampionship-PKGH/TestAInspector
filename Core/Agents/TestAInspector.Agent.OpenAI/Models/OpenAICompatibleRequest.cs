@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TestAInspector.Agent.DeepSeek.Models;
+namespace TestAInspector.Agent.OpenAI.Models;
 
 /// <summary>
-/// Модель запроса к DeepSeek
+/// Модель запроса к OpenAI
 /// </summary>
-internal class DeepSeekCompatibleRequest
+internal class OpenAICompatibleRequest
 {
     [JsonPropertyName("model")]
     public string Model { get; set; } = string.Empty;

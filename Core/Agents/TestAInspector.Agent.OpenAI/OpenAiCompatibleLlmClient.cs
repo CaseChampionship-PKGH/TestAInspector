@@ -5,38 +5,34 @@ using Microsoft.Extensions.Configuration;
 using TestAInspector.Agent.Contracts.Enums;
 using TestAInspector.Agent.Contracts.Interfaces;
 using TestAInspector.Agent.Contracts.Models;
-using TestAInspector.Agent.DeepSeek.Models;
+using TestAInspector.Agent.OpenAI.Models;
 
-namespace TestAInspector.Agent.DeepSeek;
+namespace TestAInspector.Agent.OpenAI;
 
-/// <inheritdoc cref="ILlmClient"/> на основе DeepSeek
-public class DeepSeekLlmClient : ILlmClient
+/// <inheritdoc cref="ILlmClient"/>, поддерживающий протокол OpenAI
+public class OpenAiCompatibleLlmClient : ILlmClient
 {
     private readonly HttpClient httpClient;
     private readonly string apiKey;
-    private readonly string baseUrl;
     private readonly string requestUri;
     private readonly string model;
 
     LlmVariant ILlmClient.LlmVariant => LlmVariant.Foreign;
 
     /// <summary>
-    /// Инициализирует новый экземпляр <see cref="DeepSeekLlmClient"/>
+    /// Инициализирует новый экземпляр <see cref="OpenAiCompatibleLlmClient "/>
     /// </summary>
-    public DeepSeekLlmClient(IHttpClientFactory httpClientFactory, IConfiguration config)
+    public OpenAiCompatibleLlmClient(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
-        httpClient = httpClientFactory.CreateClient("DeepSeek");
-        baseUrl = config.GetRequiredSection("ForeignLLM").GetValue<string>("BaseUrl")!;
+        httpClient = httpClientFactory.CreateClient("OpenAI");
         apiKey = config.GetRequiredSection("ForeignLLM").GetValue<string>("ApiKey")!;
         requestUri = config.GetRequiredSection("ForeignLLM").GetValue<string>("RequestUri")!;
         model = config.GetRequiredSection("ForeignLLM").GetValue<string>("Model")!;
     }
 
-    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest llmRequest)
+    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest llmRequest, string targetTest)
     {
-        httpClient.BaseAddress = new Uri(baseUrl);
-
-        var request = new DeepSeekCompatibleRequest
+        var request = new OpenAICompatibleRequest
         {
             Model = model,
             Messages =
@@ -53,13 +49,13 @@ public class DeepSeekLlmClient : ILlmClient
         {
             Content = new StringContent(json, Encoding.UTF8, "application/json")
         };
-        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Api-Key", apiKey);
+        requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
         var response = await httpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();
 
         var body = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<DeepSeekCompatibleResponse>(body);
+        var result = JsonSerializer.Deserialize<OpenAICompatibleResponse>(body);
 
         return new LlmResponse()
         {
@@ -67,19 +63,4 @@ public class DeepSeekLlmClient : ILlmClient
                ?? throw new InvalidOperationException("Пустой ответ от внешнего LLM")
         };
     }
-    //    => new()
-    //{
-    //    RawResponse = @"```json
-    //    {
-    //      ""results"": [
-    //        {
-    //          ""userId"": ""user_001"",
-    //          ""similarityPercent"": 85,
-    //          ""verdict"": ""correct"",
-    //          ""comment"": ""Ответ содержит ключевые понятия, но формулировка неполная.""
-    //        }
-    //      ]
-    //    }
-    //    ```"
-    //};
 }

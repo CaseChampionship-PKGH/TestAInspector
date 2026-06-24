@@ -1,4 +1,6 @@
-﻿namespace TestAInspector.Reporting.Contracts.Models;
+﻿using TestAInspector.Entities.Models;
+
+namespace TestAInspector.Reporting.Contracts.Models;
 
 /// <summary>
 /// Итоговый отчёт анализа тестовых заданий.
@@ -24,4 +26,9 @@ public class ReportData
     /// Рекомендации по улучшению тестовых заданий (генерируются ИИ-агентом).
     /// </summary>
     public string Recommendations { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Распарсенные данные
+    /// </summary>
+    public List<UserTestResult> ParsedUsers { get; set; } = null!;
 }

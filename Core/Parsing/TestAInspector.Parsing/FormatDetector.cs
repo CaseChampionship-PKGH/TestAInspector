@@ -65,7 +65,7 @@ public class FormatDetector : IFormatDetector
 
         if (archiveExtensions.Contains(extension))
         {
-            return InputFormat.Folder;
+            return InputFormat.Archive;
         }
 
         // 2. Если расширение не дало результата, смотрим содержимое
@@ -81,7 +81,7 @@ public class FormatDetector : IFormatDetector
 
             if (IsArchiveContent(signature))
             {
-                return InputFormat.Folder;
+                return InputFormat.Archive;
             }
 
             if (IsLikelyCsvContent(signature))

@@ -1,9 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TestAInspector.Agent.DeepSeek.Models;
+namespace TestAInspector.Agent.OpenAI.Models;
 
 /// <summary>
-/// Результат ллм модели от DeepSeek
+/// Результат ллм модели от OpenAI
 /// </summary>
 internal class Choice
 {

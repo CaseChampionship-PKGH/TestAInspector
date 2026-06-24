@@ -16,5 +16,5 @@ public interface ILlmClient
     /// <summary>
     /// Отправить запрос 
     /// </summary>
-    Task<LlmResponse> SendRequestAsync(LlmRequest request);
+    Task<LlmResponse> SendRequestAsync(LlmRequest request, string targetTest);
 }

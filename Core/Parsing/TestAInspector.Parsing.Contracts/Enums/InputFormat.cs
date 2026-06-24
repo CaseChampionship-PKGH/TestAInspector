@@ -18,5 +18,5 @@ public enum InputFormat
     /// <summary>
     /// Zip архив папок
     /// </summary>
-    Folder
+    Archive
 }

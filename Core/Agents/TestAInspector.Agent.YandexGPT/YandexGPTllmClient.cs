@@ -14,7 +14,6 @@ public class YandexGPTllmClient : ILlmClient
 {
     private readonly HttpClient httpClient;
     private readonly string apiKey;
-    private readonly string baseUrl;
     private readonly string model;
     private readonly string requestUri;
     private readonly string folderId;
@@ -27,14 +26,13 @@ public class YandexGPTllmClient : ILlmClient
     public YandexGPTllmClient(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
         httpClient = httpClientFactory.CreateClient("YandexGPT");
-        baseUrl = config.GetRequiredSection("RussianLLM").GetValue<string>("BaseUrl")!;
         model = config.GetRequiredSection("RussianLLM").GetValue<string>("Model")!;
-        requestUri = config.GetRequiredSection("ForeignLLM").GetValue<string>("RequestUri")!;
+        requestUri = config.GetRequiredSection("RussianLLM").GetValue<string>("RequestUri")!;
         apiKey = config.GetRequiredSection("RussianLLM").GetValue<string>("ApiKey")!;
         folderId = config.GetRequiredSection("RussianLLM").GetValue<string>("FolderId")!;
     }
 
-    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest llmRequest)
+    async Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest llmRequest, string targetTest)
     {
         var request = new YandexGptRequest
         {
@@ -71,19 +69,4 @@ public class YandexGPTllmClient : ILlmClient
                 ?? throw new InvalidOperationException("Пустой ответ от YandexGPT")
         };
     }
-    //    => new()
-    //{
-    //    RawResponse = @"```json
-    //    {
-    //      ""results"": [
-    //        {
-    //          ""userId"": ""user_001"",
-    //          ""similarityPercent"": 85,
-    //          ""verdict"": ""correct"",
-    //          ""comment"": ""Ответ содержит ключевые понятия, но формулировка неполная.""
-    //        }
-    //      ]
-    //    }
-    //    ```"
-    //};
 }

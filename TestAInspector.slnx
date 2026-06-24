@@ -6,7 +6,7 @@
   <Folder Name="/Core/" />
   <Folder Name="/Core/Agents/">
     <Project Path="Core/Agents/TestAInspector.Agent.Contracts/TestAInspector.Agent.Contracts.csproj" Id="68b55988-adea-4888-9311-7196c45ed42f" />
-    <Project Path="Core/Agents/TestAInspector.Agent.DeepSeek/TestAInspector.Agent.DeepSeek.csproj" Id="b5b9255e-43ee-42f6-902f-d2a47ef3b8fe" />
+    <Project Path="Core/Agents/TestAInspector.Agent.OpenAI/TestAInspector.Agent.OpenAI.csproj" Id="b5b9255e-43ee-42f6-902f-d2a47ef3b8fe" />
     <Project Path="Core/Agents/TestAInspector.Agent.YandexGPT/TestAInspector.Agent.YandexGPT.csproj" Id="d2e83fc1-5bfe-40a5-ab1a-40321e53eb1b" />
     <Project Path="Core/Agents/TestAInspector.Agent/TestAInspector.Agent.csproj" Id="15fb6390-fabb-4a83-97eb-74fd0969c9a0" />
   </Folder>
@@ -17,6 +17,7 @@
     <Project Path="Core/Entities/TestAInspector.Entities/TestAInspector.Entities.csproj" Id="03f072d3-5937-4d75-a76c-d4353c6e4def" />
   </Folder>
   <Folder Name="/Core/Parsing/">
+    <Project Path="Core/Parsing/TestAInspector.Parsing.Archive/TestAInspector.Parsing.Archive.csproj" Id="4d02a820-6eaa-4432-9ec8-dfaad6aa79a1" />
     <Project Path="Core/Parsing/TestAInspector.Parsing.Contracts/TestAInspector.Parsing.Contracts.csproj" Id="9e217f39-06b9-4ad1-8121-43ceb36de55f" />
     <Project Path="Core/Parsing/TestAInspector.Parsing.Csv/TestAInspector.Parsing.Csv.csproj" Id="80aebad6-6357-43b8-a40d-d66fc18def30" />
     <Project Path="Core/Parsing/TestAInspector.Parsing.Json/TestAInspector.Parsing.Json.csproj" Id="7dbf0d9d-d11f-4543-9fe1-f8a2e6319250" />

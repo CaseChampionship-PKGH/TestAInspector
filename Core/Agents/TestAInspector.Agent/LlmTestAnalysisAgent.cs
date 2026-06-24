@@ -34,7 +34,7 @@ public class LlmTestAnalysisAgent : ITestAnalysisAgent
         var rawResponse = await llmClient.SendRequestAsync(new LlmRequest()
         {
             RawPrompt = prompt
-        });
+        }, "analysis");
 
         var cleanJson = rawResponse.RawResponse
             .Replace("```json", "")

@@ -186,8 +186,8 @@
 				formData.Add(refFileContent, "referenceAnswers", refFile.Name);
 			}
 
-			var analysisMethodInt = selectedVariant == "russian" ? 0 : 1;
-			var requestUri = $"api/analysis/run?analysisMethod={analysisMethodInt}";
+			var analysisMethodString = selectedVariant == "russian" ? "RussianAiAgent" : "ForeignAiAgent";
+			var requestUri = $"api/analysis/run?analysisMethod={analysisMethodString}";
 			var response = await Http.PostAsync(requestUri, formData);
 
 			if (response.IsSuccessStatusCode)

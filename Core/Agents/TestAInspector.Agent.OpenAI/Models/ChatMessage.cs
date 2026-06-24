@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TestAInspector.Agent.DeepSeek.Models;
+namespace TestAInspector.Agent.OpenAI.Models;
 
 /// <summary>
 /// Сообщение к модели

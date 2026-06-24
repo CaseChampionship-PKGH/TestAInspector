@@ -105,11 +105,13 @@ public class TestAnalysisPipeline : IPipelineService
         var reportData = await reportBuilder.BuildAsync(allQuestionResults, context.AnalysisMethod);
         var excelBytes = reportExporter.ExportToExcel(reportData);
 
+        reportData.ParsedUsers = parsedUserAnswers;
+
         return new PipelineResult()
         {
             ReportData = reportData,
             ExcelReport = excelBytes,
-            Errors = validationResult.Warnings.ToList()
+            Errors = validationResult.Warnings.ToList(),
         };
     }
 

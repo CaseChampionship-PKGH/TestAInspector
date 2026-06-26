@@ -70,5 +70,5 @@ public class QuestionBatchBuilder : IQuestionBatchBuilder
     }
 
     private string Normalize(string text) =>
-        text?.Trim().ToLowerInvariant() ?? string.Empty;
+        text?.Trim() ?? string.Empty;
 }

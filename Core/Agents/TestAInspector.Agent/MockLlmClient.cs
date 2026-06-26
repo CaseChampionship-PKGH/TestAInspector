@@ -9,7 +9,7 @@ namespace TestAInspector.Agent;
 /// </summary>
 public class MockLlmClient : ILlmClient
 {
-    LlmVariant ILlmClient.LlmVariant => LlmVariant.Foreign;
+    LlmVariant ILlmClient.LlmVariant => LlmVariant.Russian;
 
     Task<LlmResponse> ILlmClient.SendRequestAsync(LlmRequest prompt, string targetTest)
     {

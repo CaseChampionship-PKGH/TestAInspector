@@ -25,7 +25,7 @@ public class YandexGPTllmClient : ILlmClient
     /// </summary>
     public YandexGPTllmClient(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
-        httpClient = httpClientFactory.CreateClient("YandexGPT");
+        httpClient = httpClientFactory.CreateClient("RussianLLM");
         model = config.GetRequiredSection("RussianLLM").GetValue<string>("Model")!;
         requestUri = config.GetRequiredSection("RussianLLM").GetValue<string>("RequestUri")!;
         apiKey = config.GetRequiredSection("RussianLLM").GetValue<string>("ApiKey")!;

@@ -168,7 +168,7 @@ TestAInspector.sln
 
 1. Клонируйте репозиторий.
 2. В проекте `Api/appsettings.json` задайте:
-   ```json
+```json
   "ForeignLLM": {
     "BaseUrl": "https://openrouter.ai/api/v1/",
     "RequestUri": "chat/completions",
@@ -184,8 +184,8 @@ TestAInspector.sln
     "Scope": "GIGACHAT_API_PERS",
     "BypassSsl": true
   },
-   ```
-3. В `Web/appsettings.json` укажите `ApiBaseUrl` (по умолчанию https://localhost:5001).
+```
+3. В `Web/appsettings.json` укажите `ApiBaseUrl` (по умолчанию https://localhost:7051).
 
 ### Запуск через CLI
 ```bash
